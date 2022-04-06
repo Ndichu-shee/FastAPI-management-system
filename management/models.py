@@ -1,8 +1,15 @@
-from pydantic import BaseModel, Field,EmailStr
-from typing import Optional
+from pydantic import BaseModel
+from pydantic import BaseModel, Field, EmailStr
+from bson import ObjectId
+from typing import Optional, List
+from check import PyObjectId
 
 
+
+
+# CREATE MODEL
 class Student(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     first_name:str = Field(...)
     last_name:str = Field(...)
     age:int = Field(...)
@@ -12,27 +19,20 @@ class Student(BaseModel):
     email:EmailStr = Field(...)
     room:str = Field(...)
 
-    class config:
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
         schema_extra = {
-            "example": {
-                "first_name":"Joyce",
-                "last_name":"Ndichu",
-                "age":23,
+                "example": {
+                "first_name":"Jane",
+                "last_name":"Kattie",
+                "age":21,
                 "nationality":"Kenyan",
                 "class_name":"LisaLab",
                 "nationality_id":"23763722",
-                "email":"ndichujoyce@gmail.com",
+                "email":"jane@gmail.com",
                 "room":"Tanga",
-            }
+                }
+
         }
-
-def ResponseModel(data, message):
-    return {
-        "data": [data],
-        "code": 200,
-        "message": message,
-    }
-
-
-def ErrorResponseModel(error, code, message):
-    return {"error": error, "code": code, "message": message}

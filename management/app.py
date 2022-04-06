@@ -1,46 +1,42 @@
-from fastapi import FastAPI,Body,status,HTTPException
-from typing import Optional
 from models import Student
+from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from database import add_student,retrieve_students,retrieve_student,delete_student
-from database import school_collection
+from fastapi import FastAPI,APIRouter, Body, status, HTTPException
+from typing import Optional
+from database import db
 
 
-app = FastAPI(title="School Mangement System")
+app = FastAPI(title="School Management System")
 
+@app.get("/")
+async def read_main():
+    return {"msg": "School Management System"}
 
-@app.post("/Student", tags=["Students"],status_code=201)
-async def add_student_data(student_data: dict,student: Student = Body(...)) -> dict:
+@app.post("/student", response_description = "Add a person to the database", response_model=Student,tags=["Students"])
+async def add_student(student: Student = Body(...)):
     student = jsonable_encoder(student)
-    new_student = await add_student(student)
-    return (new_student, "A new student has been added in the system")
+    students = await db["student"].insert_one(student)
+    add_student = await db["student"].find_one({"_id":students.inserted_id})
+
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=add_student)
+
+@app.get("/students", response_description="All Registered", response_model=Student,tags=["Students"])
+async def all_students():
+    students = await db["students"].find().to_list(1000)
+    return students
 
 
+@app.get("/student/{id}", response_description="specific student details", response_model=Student,tags=["Students"])
+async def get_student(id: str):
+    if (student := await db["student"].find_one({"_id":id})) is not None:
+        return student
+    raise HTTPException(status_code=404, detail="Student id not found, try using another Id")
 
-@app.get("/Students",tags=["Students"])
-async def get_students():
-    students = await retrieve_students()
-    if students:
-        return (students, "Students details retrieved successfully")
-    return (students, "There are no students registred yet")
+@app.delete("/student/{id}", response_description="Delete a student from the system", response_model=Student,tags=["Students"])
+async def delete_student(id: str):
+    delete_result = await db["student"].delete_one({"_id":id})
 
-@app.get("/{id}",tags=["Students"])
-async def get_student_data(id):
-    student = await retrieve_student(id)
-    if student:
-        return (student, "Student details retrieved successfully")
-    return HTTPException (status_code=404,detail='student id not found')
+    if delete_result.deleted_count == 1:
+        JSONResponse(status_code=404, detail="Student id not found, try using another Id")
 
-@app.delete("/{id}",tags=["Students"])
-async def delete_student_data(id: str):
-    deleted_student = await delete_student(id)
-    if deleted_student:
-        return (
-           "Student deleted successfully"
-        )
-    return (
-         HTTPException (status_code=404,detail='student id not found')
-
-    )
-    #624c90b77969c684b23e980d
-    #624c9394f2a487d01364c6ec
+    JSONResponse(status_code=200)
