@@ -16,7 +16,7 @@ data = {
 }
 
 
-def test_read_main():
+def test_index():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"msg": "School Management System"}

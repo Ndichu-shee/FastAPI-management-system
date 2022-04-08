@@ -8,8 +8,8 @@ from database import db
 
 app = FastAPI(title="School Management System")
 
-@app.get("/")
-async def read_main():
+@app.get("/",tags=["Index"])
+async def index ():
     return {"msg": "School Management System"}
 
 @app.post("/student", response_description = "Add a person to the database", response_model=Student,tags=["Students"])
