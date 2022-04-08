@@ -4,15 +4,21 @@ from fastapi.encoders import jsonable_encoder
 from fastapi import FastAPI,APIRouter, Body, status, HTTPException
 from typing import Optional
 from database import db
+from database import school_collection
 
 
-app = FastAPI(title="School Management System")
+app = FastAPI(
+    title="School Management System",
+    description="A School Management system built in FastAPI",
+    version="0.0.1",
+    terms_of_service="http://example.com/terms/",
 
+)
 @app.get("/",tags=["Index"])
 async def index ():
     return {"msg": "School Management System"}
 
-@app.post("/student", response_description = "Add a person to the database", response_model=Student,tags=["Students"])
+@app.post("/student", response_description = "Add a student in the system", response_model=Student,tags=["Students"])
 async def add_student(student: Student = Body(...)):
     student = jsonable_encoder(student)
     students = await db["student"].insert_one(student)
@@ -20,13 +26,15 @@ async def add_student(student: Student = Body(...)):
 
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=add_student)
 
-@app.get("/students", response_description="All Registered", response_model=Student,tags=["Students"])
+@app.get("/students", response_description="All Registered students",tags=["Students"])
 async def all_students():
-    students = await db["students"].find().to_list(1000)
-    return students
+   students = []
+   async for student in db.school_collection.find():
+    students.append(student)
+   return students
 
 
-@app.get("/student/{id}", response_description="specific student details", response_model=Student,tags=["Students"])
+@app.get("/student/{id}", response_description="specific student's details", response_model=Student,tags=["Students"])
 async def get_student(id: str):
     if (student := await db["student"].find_one({"_id":id})) is not None:
         return student
