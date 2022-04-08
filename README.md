@@ -1,16 +1,28 @@
 # FastAPI-management-system
 A School Management System that allows registration, reading and deleting students from the system
-#Installation
-##Install pipenv
+
+# Installation
+
+## Install pipenv
 pip install  pipenv
-##Create Virtual Environment & install dependencies
+
+## Create Virtual Environment & install dependencies
 pipenv install -r requirements.txt --python=python3
-##Activate Virtual Environment
+
+## Activate Virtual Environment
 pipenv shell
-##Run Server
+
+Running the app
+
+## Run Server
 uvicorn app:app --reload
-##Launch browser
- Launch browser to http://localhost:8000/docs/ 
+
+## Launch browser
+Launch browser to http://localhost:8000/docs/ 
+
+# Running the Tests
+### unit tests
+## pytest
 
 
 
