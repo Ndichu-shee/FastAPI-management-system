@@ -3,26 +3,23 @@ A School Management System that allows registration, reading and deleting studen
 
 # Installation
 
-## Install pipenv
-pip install  pipenv
+### Install pipenv
+`pip install  pipenv`
 
-## Create Virtual Environment & install dependencies
-pipenv install -r requirements.txt --python=python3
+### Create Virtual Environment & install dependencies
+`pipenv install -r requirements.txt --python=python3`
 
-## Activate Virtual Environment
-pipenv shell
+### Activate Virtual Environment
+`pipenv shell`
 
-Running the app
+# Running the app
 
-## Run Server
-uvicorn app:app --reload
+### Run Server
+`uvicorn app:app --reload`
 
-## Launch browser
+### Launch browser
 Launch browser to http://localhost:8000/docs/ 
 
 # Running the Tests
 ### unit tests
-## pytest
-
-
-
+`pytest`
