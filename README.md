@@ -6,10 +6,14 @@ A School Management System that allows registration, reading and deleting studen
 
 ### Create Virtual Environment & install dependencies
 `python3 -m venv env`
-`pipenv install -r requirements.txt 
 
 ### Activate Virtual Environment
 `source env/bin/activate`
+
+### Install the dependencies
+`pipenv install -r requirements.txt`
+
+
 
 # Database
 If you are using Linux Install MongoDB using the following commands:
