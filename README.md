@@ -29,6 +29,9 @@ If you are using Linux Install MongoDB using the following commands:
 `sudo systemctl start mongod`
 
 `sudo systemctl status mongod`
+
+https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
+
 # Running the app
 
 ### Run Server
